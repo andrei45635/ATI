@@ -3,9 +3,9 @@ package com.example.ati.utils.event;
 import com.example.ati.domain.Bed;
 
 public class EntityChangeEvent implements Event {
-    private ChangeEventType type;
+    private final ChangeEventType type;
     private Bed old_data;
-    private Bed data;
+    private final Bed data;
 
     public EntityChangeEvent(ChangeEventType type, Bed old_data, Bed data) {
         this.type = type;

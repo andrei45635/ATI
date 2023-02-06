@@ -46,16 +46,15 @@ public class HelloController implements Observer<EntityChangeEvent> {
                 noOfFreeBeds++;
             }
         }
-        String text = "Free beds: " + (21 - noOfFreeBeds);
+        String text = "Free beds: " + (41 - noOfFreeBeds);
         freeBedsLabel.setText(text);
 
     }
 
     public void setService(Service service) throws IOException {
         this.service = service;
-        initModel();
-
         service.addObserver(this);
+        initModel();
 
         Stage pacientsStage = new Stage();
         FXMLLoader fxmlLoaderPacients = new FXMLLoader(HelloApplication.class.getResource("pacients-view.fxml"));
@@ -96,6 +95,6 @@ public class HelloController implements Observer<EntityChangeEvent> {
 
     @FXML
     private void onClickWindow(MouseEvent mouseEvent) {
-        //initModel();
+        initModel();
     }
 }

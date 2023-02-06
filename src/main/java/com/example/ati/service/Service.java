@@ -10,6 +10,7 @@ import com.example.ati.utils.event.ChangeEventType;
 import com.example.ati.utils.event.EntityChangeEvent;
 import com.example.ati.utils.observer.Observable;
 import com.example.ati.utils.observer.Observer;
+import com.example.ati.validator.ValidatorException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,19 +39,22 @@ public class Service implements Observable<EntityChangeEvent> {
     }
 
     public void addPacientToBed(BedType type, Pacient2PacientDiagnosticDTO selectedPacient){
-        Bed newBed;
+        Bed newBed = null;
         List<Pacient> allPacients = pacientRepoDB.waitingPacients();
         for(Pacient pacient: allPacients){
-            if(pacient.getCNP() == selectedPacient.getPacientCNP()){
+            if(pacient.getCNP() == selectedPacient.getPacientCNP() && bedRepoDB.findAll().size() < 41){
                 if(type == BedType.TIM || type == BedType.TIC){
                     newBed = new Bed(pacient.getAge() + 1, type, "DA", pacient.getCNP());
                 } else {
                     newBed = new Bed(pacient.getAge() + 1, type, "NU", pacient.getCNP());
                 }
-                bedRepoDB.save(newBed);
-                this.notifyObservers(new EntityChangeEvent(ChangeEventType.ADD, newBed));
+            } else {
+                throw new ValidatorException("Nu sunt locuri disponibile!\n");
             }
         }
+        assert newBed != null;
+        bedRepoDB.save(newBed);
+        this.notifyObservers(new EntityChangeEvent(ChangeEventType.ADD, newBed));
     }
 
     @Override
