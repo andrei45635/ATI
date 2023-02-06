@@ -17,7 +17,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
@@ -54,7 +53,6 @@ public class HelloController implements Observer<EntityChangeEvent> {
 
     public void setService(Service service) throws IOException {
         this.service = service;
-        //setNoOfBeds();
         initModel();
 
         service.addObserver(this);

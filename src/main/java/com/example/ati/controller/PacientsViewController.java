@@ -5,6 +5,8 @@ import com.example.ati.domain.Pacient;
 import com.example.ati.dto.Pacient2PacientDiagnosticDTO;
 import com.example.ati.mapper.Pacient2PacientDiagnosticMapper;
 import com.example.ati.service.Service;
+import com.example.ati.utils.event.EntityChangeEvent;
+import com.example.ati.utils.observer.Observer;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,7 +18,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.List;
 
-public class PacientsViewController {
+public class PacientsViewController implements Observer<EntityChangeEvent> {
     @FXML
     private ComboBox<BedType> bedTypeComboBox;
     @FXML
@@ -51,6 +53,7 @@ public class PacientsViewController {
         List<Pacient> pacientList = service.pacientsWithoutBeds();
         List<Pacient2PacientDiagnosticDTO> diagnosticDTOList = pacient2PacientDiagnosticMapper.convert(pacientList);
         diagnosticModel.setAll(diagnosticDTOList);
+        service.addObserver(this);
     }
 
     @FXML
@@ -58,6 +61,11 @@ public class PacientsViewController {
         Pacient2PacientDiagnosticDTO selectedPacient = pacientTableView.getSelectionModel().getSelectedItem();
         BedType selectedType = bedTypeComboBox.getValue();
         service.addPacientToBed(selectedType, selectedPacient);
+        initModel();
+    }
+
+    @Override
+    public void update(EntityChangeEvent entityChangeEvent) {
         initModel();
     }
 }
